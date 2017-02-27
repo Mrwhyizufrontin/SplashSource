@@ -13,7 +13,7 @@ $$$$$$$$$$$$$$$$$       $$$           $$$       $$$$$$$$$$$$$$$$$       $$$$$$$$
 $$$$$$$$$$$$$$$$$       $$$$$$$$$$$$$$$$$       $$$                     $$$           $$$       $$$$$$$$$$$$$$$$$       $$$         $$$     $$$$$$$$$$$$$$$$$'''
 
 print '\nChoose a number from the options below'
-options = raw_input('\t\tOptions:\n\t\t1 for jackets\n\t\t2 for shirts\n\t\t3 for tops/sweaters\n\t\t4 for sweatshirts\n\t\t5 for pants\n\t\t6 for t-shirts\n\t\t7 for hats\n\t\t8 for bags\n\t\t9 for accessories\n\t\t10 for skate\nEnter: ')
+options = raw_input('\t\tOptions:\n\t\t1 for jackets\n\t\t2 for shirts\n\t\t3 for tops/sweaters\n\t\t4 for sweatshirts\n\t\t5 for pants\n\t\t6 for t-shirts\n\t\t7 for hats\n\t\t8 for bags\n\t\t9 for accessories\n\t\t10 for skate\n\t\t11 for all\nEnter: ')
 base_url = 'http://www.supremenewyork.com/shop/'
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36'
                 '(KHTML, like Gecko) Chrome/56.0.2924.28 Safari/537.36'}
@@ -45,12 +45,16 @@ def supreme(options):
         page = 'all/accessories'
     if options == '10':
         page = 'all/skate'
+    if options == '11':
+        page = 'all'
 
     product_page = base_url + str(page)
     page = requests.get(product_page, headers=headers)
     soup = BeautifulSoup(page.text, 'html.parser')
-    for products in soup.findAll('a')[15:]:
-        print products
+    variants = []
+    for products in soup.findAll('h1', 'p'):
+        for colors in soup.findAll('p'):
+            print 'Products: ' + products.text + '\nColor: ' + colors.text
         # slack.chat.post_message('#supreme', products.text)
     # print page.text
 
