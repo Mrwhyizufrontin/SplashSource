@@ -64,4 +64,13 @@ def supreme(options):
         color.append(colors)
         print '\nColor: ' + colored(colors, 'magenta')
 
+def add_to_cart(products, colors):
+    choose_products = raw_input(colored('Enter in a product from the products above: ', 'yellow'))
+    if choose_products != products:
+        print colored('Invalid product!!!', 'red')
+    choose_colors = raw_input(colored('Enter in a color from the colors above: ', 'yellow'))
+    if choose_colors != colors:
+        print colored('Invalid color!!!', 'red')
+
 supreme(options)
+add_to_cart(products, colors)
