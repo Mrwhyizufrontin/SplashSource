@@ -1,8 +1,16 @@
 import requests
-import urllib2
+import sys
+import itertools
 from bs4 import BeautifulSoup
 from termcolor import colored
 
+
+vision = raw_input('Do you fw the vision? Y/N: ')
+if vision == 'Y' or vision == 'y':
+    print colored('Let`s build', 'red')
+elif vision != 'Y' or vision != 'y':
+    print colored('You are washed! Goodbye', 'red')
+    sys.exit(colored('Exiting now', 'red'))
 
 supreme_text = '''
 $$$$$$$$$$$$$$$$$       $$$           $$$       $$$$$$$$$$$$$$$$$       $$$$$$$$$$$$$$$$$       $$$$$$$$$$$$$$$$$       $$$$$$   $$$$$$     $$$$$$$$$$$$$$$$$
@@ -14,7 +22,7 @@ print colored(supreme_text, 'red')
 
 print '\nChoose a number from the options below'
 
-options = raw_input('\t\tOptions:\n\t\t1 for jackets\n\t\t2 for shirts\n\t\t3 for tops/sweaters\n\t\t4 for sweatshirts\n\t\t5 for pants\n\t\t6 for t-shirts\n\t\t7 for hats\n\t\t8 for bags\n\t\t9 for accessories\n\t\t10 for skate\n\t\t11 for all\nEnter: ')
+options = raw_input('\t\tOptions:\n\t\t1 for jackets\n\t\t2 for shirts\n\t\t3 for tops/sweaters\n\t\t4 for sweatshirts\n\t\t5 for pants\n\t\t6 for hats\n\t\t7 for accessories\n\t\t8 for shoes\n\t\t9 for skate\nEnter: ')
 
 base_url = 'http://www.supremenewyork.com/shop/'
 
@@ -33,26 +41,22 @@ def supreme(options):
 
     if options == '1':
         page = 'all/jackets'
-    if options == '2':
+    elif options == '2':
         page = 'all/shirts'
-    if options == '3':
+    elif options == '3':
         page = 'all/tops_sweaters'
-    if options == '4':
+    elif options == '4':
         page = 'all/sweatshirts'
-    if options == '5':
+    elif options == '5':
         page = 'all/pants'
-    if options == '6':
-        page = 'all/t-shirts'
-    if options == '7':
+    elif options == '6':
         page = 'all/hats'
-    if options == '8':
-        page = 'all/bags'
-    if options == '9':
+    elif options == '7':
         page = 'all/accessories'
-    if options == '10':
+    elif options == '8':
+        page = 'all/shoes'
+    elif options == '9':
         page = 'all/skate'
-    if options == '11':
-        page = 'all'
 
     product_page = base_url + str(page)
     page = requests.get(product_page, headers=headers)
@@ -70,12 +74,13 @@ def supreme(options):
         colors = colors.text
         color.append(colors)
 
-    print '\nProducts: \n'
-    for item in items:
-        print colored(item + '\n', 'red')
-    print 'Colors: \n'
-    for colors in color:
-        print colored(colors + '\n', 'cyan')
+    combined =  list(itertools.chain(*zip(items, color)))
+    combined = str(combined).replace('[', '')
+    combined = str(combined).replace("u", "")
+    combined = str(combined).replace("'", "")
+    combined = str(combined).replace(']', '')
+
+    print 'Products and colors are below: \n' + colored(combined.encode('utf-8'), 'cyan')
     return items, color
 
 def add_to_cart(item, clr):
