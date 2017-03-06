@@ -3,6 +3,7 @@ import sys
 import itertools
 from bs4 import BeautifulSoup
 from termcolor import colored
+from selenium import webdriver
 
 
 vision = raw_input('Do you fw the vision? Y/N: ')
@@ -28,6 +29,7 @@ base_url = 'http://www.supremenewyork.com/shop/'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36'
                 '(KHTML, like Gecko) Chrome/56.0.2924.28 Safari/537.36'}
+driver = Webdriver.PhantomJS()
 
 global product_id
 global variant
@@ -83,7 +85,7 @@ def supreme(options):
     print 'Products and colors are below: \n' + colored(combined.encode('utf-8'), 'cyan')
     return items, color
 
-def add_to_cart(item, clr):
+def checkout(item, clr):
     correct_product = False
     correct_color = False
 
@@ -102,4 +104,4 @@ def add_to_cart(item, clr):
             correct_color = True
 
 item, clr = supreme(options)
-add_to_cart(item, clr)
+checkout(item, clr)
