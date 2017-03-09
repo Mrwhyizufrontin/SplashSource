@@ -102,7 +102,7 @@ def checkout(item, clr):
             correct_color = True # Leave this as it is
 
     checkoutUrl = 'https://www.supremenewyork.com/checkout' # Leave this as it is
-    sizeOption = '34' # Enter in a size you want, either pants size or shirt/pant size. Comment this line out if the item does not have a size
+    sizeOption = 'Medium' # Enter in a size you want, either pants size or shirt/pant size. Comment this line out if the item does not have a size
     name = 'John Doe' # Enter in your name
     email = 'Test@example.com' # Enter in your email
     phoneNum = '5555555555' # Enter in your phone number
@@ -119,7 +119,7 @@ def checkout(item, clr):
 
     driver = webdriver.Chrome() # You can change this to phantomJS if you don't want a window to pop up
     driver.get(product_page)
-    
+
     product_select = driver.find_element_by_xpath('//*[@id="container"]/article[' + str(item.index(choose_products) + 1) + ']/div/h1/a[contains(text(), choose_products)]')
     product_select.click()
     sleep(0.5)
@@ -165,7 +165,7 @@ def checkout(item, clr):
     Country = Select(driver.find_element_by_id('order_billing_country'))
     Country.select_by_visible_text(country)
 
-    save_address = driver.find_element_by_id('store_address')
+    save_address = driver.find_element_by_id('store_address') # Line of potential error 168 and 169
     save_address.click()
 
     card_type = Select(driver.find_element_by_id('credit_card_type'))
@@ -180,7 +180,7 @@ def checkout(item, clr):
     card_year = driver.find_element_by_id('credit_card_year')
     card_year.send_keys(ccYear)
 
-    terms_button = driver.find_element_by_xpath('//*[@id="order_terms"]')
+    terms_button = driver.find_element_by_xpath('//*[@id="order_terms"]') # Line of potential error 183 and 184
     terms_button.click()
 
     finalize_order = driver.find_element_by_xpath('//*[@id="pay"]/input')
