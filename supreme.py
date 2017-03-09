@@ -1,9 +1,11 @@
 import requests
 import sys
 import itertools
+from time import sleep
 from bs4 import BeautifulSoup
 from termcolor import colored
 from selenium import webdriver
+from selenium.webdriver.support.ui import Select
 
 
 vision = raw_input('Do you fw the vision? Y/N: ')
@@ -29,16 +31,13 @@ base_url = 'http://www.supremenewyork.com/shop/'
 
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36'
                 '(KHTML, like Gecko) Chrome/56.0.2924.28 Safari/537.36'}
-driver = Webdriver.PhantomJS()
 
-global product_id
-global variant
-global page
-global product_page
 global products
-global colors
 
 def supreme(options):
+    global page
+    global product_page
+
     requests.get(base_url)
 
     if options == '1':
@@ -66,7 +65,6 @@ def supreme(options):
 
     items = []
     color = []
-    variants = []
 
     for products in soup.findAll('h1')[1:]:
         products = products.text
@@ -78,7 +76,7 @@ def supreme(options):
 
     combined =  list(itertools.chain(*zip(items, color)))
     combined = str(combined).replace('[', '')
-    combined = str(combined).replace("u", "")
+    combined = str(combined).replace("u'", "")
     combined = str(combined).replace("'", "")
     combined = str(combined).replace(']', '')
 
@@ -86,6 +84,7 @@ def supreme(options):
     return items, color
 
 def checkout(item, clr):
+
     correct_product = False
     correct_color = False
 
@@ -102,6 +101,91 @@ def checkout(item, clr):
             print colored('Invalid color!!!', 'red')
         else:
             correct_color = True
+
+    checkoutUrl = 'https://www.supremenewyork.com/checkout'
+    sizeOption = '34' # Enter in a size you want
+    name = 'John Doe' # Enter in your name
+    email = 'Test@example.com' # Enter in your email
+    phoneNum = '5555555555' # Enter in your phone number
+    address1 = '1600 Pennsylvania Avenue NW' # Enter in your address
+    address2 = 'Apartment 123' # Enter in your apartment/unit/etc number if applicable
+    city = 'Compton' # Enter in your city
+    zipcode = '20500' # Enter in your zipcode
+    state = 'DC' # Enter in your state abbreviation
+    country = 'USA' # Enter in your country abbreviation
+    ccType = 'Visa'  # Enter in your card type Visa, Mastercard, or American Express
+    ccNum = '5274576954806318'  # Enter in your card number
+    ccMonth = '06'  # Enter in your card's expiration month
+    ccYear = '2019'  # Enter in your card's expiration year in the formay YYYY
+
+    driver = webdriver.Chrome()
+    driver.get(product_page)
+    # choose_products = choose_products.encode('utf-8')
+    product_select = driver.find_element_by_xpath('//*[@id="container"]/article[' + str(item.index(choose_products) + 1) + ']/div/h1/a[contains(text(), choose_products)]')
+    product_select.click()
+    sleep(0.5)
+
+    size = Select(driver.find_element_by_xpath('//*[@id="size"]'))
+    size.select_by_visible_text(sizeOption)
+    sleep(0.5)
+
+    atc_button = driver.find_element_by_name('commit')
+    atc_button.click()
+    sleep(0.5)
+
+    checkout_button = driver.find_element_by_xpath('//*[@id="cart"]/a[2]')
+    checkout_button.click()
+    sleep(0.5)
+
+    driver.get(checkoutUrl)
+
+    flname = driver.find_element_by_id('order_billing_name')
+    flname.send_keys(name)
+
+    Email = driver.find_element_by_id('order_email')
+    Email.send_keys(email)
+
+    phone_num = driver.find_element_by_id('order_tel')
+    phone_num.send_keys(phoneNum)
+
+    Address1 = driver.find_element_by_id('bo')
+    Address1.send_keys(address1)
+
+    Address2 = driver.find_element_by_id('oba3')
+    Address2.send_keys(address2)
+
+    Zipcode = driver.find_element_by_id('order_billing_zip')
+    Zipcode.send_keys(zipcode)
+
+    City = driver.find_element_by_id('order_billing_city')
+    City.send_keys(city)
+
+    State = Select(driver.find_element_by_id('order_billing_state'))
+    State.select_by_visible_text(state)
+
+    Country = Select(driver.find_element_by_id('order_billing_country'))
+    Country.select_by_visible_text(country)
+
+    save_address = driver.find_element_by_id('store_address')
+    save_address.click()
+
+    card_type = Select(driver.find_element_by_id('credit_card_type'))
+    card_type.select_by_visible_text(ccType)
+
+    card_number = driver.find_element_by_id('cnb')
+    card_number.send_keys(ccNum)
+
+    card_month = driver.find_element_by_id('credit_card_month')
+    card_month.send_keys(ccMonth)
+
+    card_year = driver.find_element_by_id('credit_card_year')
+    card_year.send_keys(ccYear)
+
+    terms_button = driver.find_element_by_xpath('//*[@id="order_terms"]')
+    terms_button.click()
+
+    finalize_order = driver.find_element_by_xpath('//*[@id="pay"]/input')
+    finalize_order.click()
 
 item, clr = supreme(options)
 checkout(item, clr)
