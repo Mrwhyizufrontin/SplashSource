@@ -32,9 +32,8 @@ base_url = 'http://www.supremenewyork.com/shop/'
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36'
                 '(KHTML, like Gecko) Chrome/56.0.2924.28 Safari/537.36'}
 
-global products
-
 def supreme(options):
+    global products
     global page
     global product_page
 
@@ -85,25 +84,25 @@ def supreme(options):
 
 def checkout(item, clr):
 
-    correct_product = False
-    correct_color = False
+    correct_product = False # Leave this as it is
+    correct_color = False # Leave this as it is
 
     while not correct_product:
         choose_products = raw_input(colored('Enter in a product from the products above: ', 'yellow'))
         if choose_products not in item:
             print colored('Invalid product!!!', 'red')
         else:
-            correct_product = True
+            correct_product = True # Leave this as it is
 
     while not correct_color:
         choose_colors = raw_input(colored('Enter in a color from the colors above: ', 'yellow'))
         if choose_colors not in clr:
             print colored('Invalid color!!!', 'red')
         else:
-            correct_color = True
+            correct_color = True # Leave this as it is
 
-    checkoutUrl = 'https://www.supremenewyork.com/checkout'
-    sizeOption = '34' # Enter in a size you want
+    checkoutUrl = 'https://www.supremenewyork.com/checkout' # Leave this as it is
+    sizeOption = '34' # Enter in a size you want, either pants size or shirt/pant size. Comment this line out if the item does not have a size
     name = 'John Doe' # Enter in your name
     email = 'Test@example.com' # Enter in your email
     phoneNum = '5555555555' # Enter in your phone number
@@ -118,9 +117,9 @@ def checkout(item, clr):
     ccMonth = '06'  # Enter in your card's expiration month
     ccYear = '2019'  # Enter in your card's expiration year in the formay YYYY
 
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome() # You can change this to phantomJS if you don't want a window to pop up
     driver.get(product_page)
-    # choose_products = choose_products.encode('utf-8')
+    
     product_select = driver.find_element_by_xpath('//*[@id="container"]/article[' + str(item.index(choose_products) + 1) + ']/div/h1/a[contains(text(), choose_products)]')
     product_select.click()
     sleep(0.5)
