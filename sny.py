@@ -171,7 +171,7 @@ def checkout(item, clr):
     card_type = Select(driver.find_element_by_id('credit_card_type'))
     card_type.select_by_visible_text(ccType)
 
-    card_number = driver.find_element_by_id('cnb')
+    card_number = driver.find_element_by_xpath('//*[@id="cnb"]')
     card_number.send_keys(ccNum)
 
     card_month = driver.find_element_by_id('credit_card_month')
